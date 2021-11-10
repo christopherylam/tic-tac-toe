@@ -8,8 +8,10 @@ class Game extends React.Component {
             history: [
                 { squares: Array(9).fill(null) }
             ],
-            xIsNext: true,
-            stepNumber: 0
+            player1IsNext: true,
+            stepNumber: 0,
+            player1: null,
+            player2: null
         };
 
         this.resetGame = this.resetGame.bind(this);
@@ -19,7 +21,7 @@ class Game extends React.Component {
     jumpTo(step) {
         this.setState({
             stepNumber: step,
-            xIsNext: (step % 2) === 0 ? true : false
+            player1IsNext: (step % 2) === 0 ? true : false
         });
     }
 
@@ -28,8 +30,10 @@ class Game extends React.Component {
             history: [
                 { squares: Array(9).fill(null) }
             ],
-            xIsNext: true,
-            stepNumber: 0
+            player1IsNext: true,
+            stepNumber: 0,
+            player1: null,
+            player2: null
         });
     }
 
@@ -37,9 +41,18 @@ class Game extends React.Component {
         const history = this.state.history.slice(0, this.state.history.length - 1);
         this.setState({
             history: history,
-            xIsNext: ((history.length - 1) % 2) === 0 ? true : false,
+            player1IsNext: ((history.length - 1) % 2) === 0 ? true : false,
             stepNumber: history.length - 1
         });
+    }
+
+    selectPlayer(type) {
+        if(type === 'X') {
+            this.setState({ player1: 'X', player2: 'O' });
+        }
+        else {
+            this.setState({ player1: 'O', player2: 'X' });
+        }
     }
 
     calculateWinner(squares) {
@@ -77,10 +90,10 @@ class Game extends React.Component {
             return;
         }
         const squares = current.squares.slice();
-        squares[i] = this.state.xIsNext ? 'X' : 'O';
+        squares[i] = this.state.player1IsNext ? this.state.player1 : this.state.player2;
         this.setState({
             history: history.concat([{squares: squares}]), 
-            xIsNext: !this.state.xIsNext,
+            player1IsNext: !this.state.player1IsNext,
             stepNumber: history.length,
         });
     }
@@ -109,7 +122,7 @@ class Game extends React.Component {
                 status = `Winner: ${winner}`;
             }
             else {
-                status = `Player's Turn: ${this.state.xIsNext ? 'X' : 'O'}`;
+                status = `Player's Turn: ${this.state.player1IsNext ? this.state.player1 : this.state.player2}`;
             }
         }
 
@@ -131,19 +144,37 @@ class Game extends React.Component {
         }
 
         return (
-            <div className="game">
-                <div className="game-board">
-                    <Board 
-                        squares={current.squares}
-                        onClick={(i) => {this.handleClick(i)}}
-                    />
-                    <br />
-                    { gameButtons }
-                </div>
-                <div className="game-info">
-                    <h3>{status}</h3>
-                    {gameInfo}
-                </div>
+            <div>
+                {
+                    (!this.state.player1 && !this.state.player2) && (
+                        <div>
+                            <h3 align="center">Select which player goes first:</h3>
+                            <br />
+                            <div style={{display:'flex', justifyContent: 'center'}}>
+                                <span style={{ marginRight: "10px" }} className="player-button" onClick={() => {this.selectPlayer('O')}}>O</span>
+                                <span style={{ marginLeft: "10px" }} className="player-button" onClick={() => {this.selectPlayer('X')}}>X</span>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    (this.state.player1 && this.state.player2) && (
+                        <div className="game">
+                            <div className="game-board">
+                                <Board 
+                                    squares={current.squares}
+                                    onClick={(i) => {this.handleClick(i)}}
+                                />
+                                <br />
+                                { gameButtons }
+                            </div>
+                            <div className="game-info">
+                                <h3>{status}</h3>
+                                {gameInfo}
+                            </div>
+                        </div>
+                    )
+                }
             </div>
         );
     }
