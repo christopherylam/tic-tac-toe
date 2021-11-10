@@ -11,12 +11,34 @@ class Game extends React.Component {
             xIsNext: true,
             stepNumber: 0
         };
+
+        this.resetGame = this.resetGame.bind(this);
+        this.undoMove = this.undoMove.bind(this);
     }
 
     jumpTo(step) {
         this.setState({
             stepNumber: step,
             xIsNext: (step % 2) === 0 ? true : false
+        });
+    }
+
+    resetGame() {
+        this.setState({
+            history: [
+                { squares: Array(9).fill(null) }
+            ],
+            xIsNext: true,
+            stepNumber: 0
+        });
+    }
+
+    undoMove() {
+        const history = this.state.history.slice(0, this.state.history.length - 1);
+        this.setState({
+            history: history,
+            xIsNext: ((history.length - 1) % 2) === 0 ? true : false,
+            stepNumber: history.length - 1
         });
     }
 
@@ -37,7 +59,14 @@ class Game extends React.Component {
                 return squares[a];
             }
         }
-        return null;
+
+        for(let i = 0; i < squares.length; i++) {
+            if(!squares[i]) {
+                return null;
+            }
+        }
+
+        return 'draw';
     }
 
     handleClick(i) {
@@ -72,19 +101,31 @@ class Game extends React.Component {
         moves = moves.slice(1);
 
         let status;
-        if(winner) {
-            status = `Winner: ${winner}`;
+        if(winner === 'draw') {
+            status = 'Draw';
         }
         else {
-            status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
+            if(winner) {
+                status = `Winner: ${winner}`;
+            }
+            else {
+                status = `Player's Turn: ${this.state.xIsNext ? 'X' : 'O'}`;
+            }
         }
 
-        let gameInfo = '';
+        let gameInfo, gameButtons;
         if(history.length > 1) {
             gameInfo = (
                 <div>
-                    <h4>History</h4>
+                    <h4>Past Moves</h4>
                     <ol>{moves}</ol>
+                </div>
+            );
+
+            gameButtons = (
+                <div align="center">
+                    <button onClick={this.resetGame}>Reset</button>
+                    <button style={{marginLeft:'10px'}} onClick={this.undoMove}>Undo</button>
                 </div>
             );
         }
@@ -96,9 +137,11 @@ class Game extends React.Component {
                         squares={current.squares}
                         onClick={(i) => {this.handleClick(i)}}
                     />
+                    <br />
+                    { gameButtons }
                 </div>
                 <div className="game-info">
-                    {status}
+                    <h3>{status}</h3>
                     {gameInfo}
                 </div>
             </div>
