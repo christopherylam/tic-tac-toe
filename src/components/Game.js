@@ -20,18 +20,7 @@ class Game extends React.Component {
 
     jumpTo(step) {
         let history = this.state.history;
-        let result = this.calculateWinner(history[step].squares);
-        if(!result) {
-            history[step].squares.forEach(square => {
-                square.highlighted = false;
-            });
-        } 
-        else {
-            result.forEach(num => {
-                history[step].squares[num].highlighted = true;
-            });
-        }
-
+        history[step].squares = this.highlightSquares(history[step].squares);
         this.setState({
             history: history,
             stepNumber: step,
@@ -53,17 +42,7 @@ class Game extends React.Component {
 
     undoMove() {
         let history = this.state.history.slice(0, this.state.history.length - 1);
-        let result = this.calculateWinner(history[history.length - 1].squares);
-        if(!result) {
-            history[history.length - 1].squares.forEach(square => {
-                square.highlighted = false;
-            });
-        } 
-        else {
-            result.forEach(num => {
-                history[history.length - 1].squares[num].highlighted = true;
-            });
-        }
+        history[history.length - 1].squares = this.highlightSquares(history[history.length - 1].squares);
         this.setState({
             history: history,
             player1IsNext: ((history.length - 1) % 2) === 0 ? true : false,
@@ -78,6 +57,22 @@ class Game extends React.Component {
         else {
             this.setState({ player1: 'O', player2: 'X' });
         }
+    }
+
+    highlightSquares(squares) {
+        let result = this.calculateWinner(squares);
+        if(!result) {
+            squares.forEach(square => {
+                square.highlighted = false;
+            });
+        } 
+        else {
+            result.forEach(num => {
+                squares[num].highlighted = true;
+            });
+        }
+        
+        return squares;
     }
 
     calculateWinner(squares) {
