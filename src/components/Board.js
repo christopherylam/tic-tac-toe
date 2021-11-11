@@ -6,8 +6,9 @@ class Board extends React.Component {
       return (
         <Square 
             key={i}
-            value={this.props.squares[i]} 
+            value={this.props.squares[i].state} 
             onClick={() => {this.props.onClick(i)}}
+            highlighted={this.props.squares[i].highlighted}
         />);
     }
   

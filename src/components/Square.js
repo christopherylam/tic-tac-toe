@@ -3,7 +3,7 @@ import React from 'react';
 function Square(props) {
     return (
         <button 
-            className="square" 
+            className={props.highlighted ? "square highlighted" : "square"}
             onClick={props.onClick}
         >
           { props.value }

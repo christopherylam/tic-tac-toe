@@ -62,3 +62,7 @@ ol, ul {
  .player-button:hover {
      background-color: lightgray;
  }
+
+ .highlighted {
+     background-color: yellow;
+ }
