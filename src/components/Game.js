@@ -19,7 +19,21 @@ class Game extends React.Component {
     }
 
     jumpTo(step) {
+        let history = this.state.history;
+        let result = this.calculateWinner(history[step].squares);
+        if(!result) {
+            history[step].squares.forEach(square => {
+                square.highlighted = false;
+            });
+        } 
+        else {
+            result.forEach(num => {
+                history[step].squares[num].highlighted = true;
+            });
+        }
+
         this.setState({
+            history: history,
             stepNumber: step,
             player1IsNext: (step % 2) === 0 ? true : false
         });
@@ -38,7 +52,18 @@ class Game extends React.Component {
     }
 
     undoMove() {
-        const history = this.state.history.slice(0, this.state.history.length - 1);
+        let history = this.state.history.slice(0, this.state.history.length - 1);
+        let result = this.calculateWinner(history[history.length - 1].squares);
+        if(!result) {
+            history[history.length - 1].squares.forEach(square => {
+                square.highlighted = false;
+            });
+        } 
+        else {
+            result.forEach(num => {
+                history[history.length - 1].squares[num].highlighted = true;
+            });
+        }
         this.setState({
             history: history,
             player1IsNext: ((history.length - 1) % 2) === 0 ? true : false,
