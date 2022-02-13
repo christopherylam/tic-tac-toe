@@ -43,8 +43,17 @@ ol, ul {
 .game {
     margin-top: 50px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.board {
+    min-width: '440px';
+}
+
+@media (min-width: 450px) {
+    .game {
+        justify-content: space-evenly;
+    }
 }
   
  .player-button {

@@ -23,7 +23,7 @@ class Board extends React.Component {
         }
 
         return (
-            <div>
+            <div style={{minWidth: '440px'}}>
                 { boardRows }
             </div>
         );

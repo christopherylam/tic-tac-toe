@@ -159,12 +159,12 @@ class Game extends React.Component {
 
         let gameInfo, gameButtons;
         if(history.length > 1) {
-            gameInfo = (
-                <div>
-                    <h4>Past Moves</h4>
-                    <ol>{moves}</ol>
-                </div>
-            );
+            // gameInfo = (
+            //     <div>
+            //         <h4>Past Moves</h4>
+            //         <ol>{moves}</ol>
+            //     </div>
+            // );
 
             gameButtons = (
                 <div align="center">

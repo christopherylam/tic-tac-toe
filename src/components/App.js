@@ -5,7 +5,6 @@ function App() {
     return (
         <div>
             <h1 align="center">Tic Tac Toe</h1>
-            <h3 align="center">By: Christopher Lam</h3>
             <Game />
         </div>
     );
